@@ -7,7 +7,7 @@
     - name: deploying into jboss application server
       copy:
         src: /var/lib/jenkins/workspace/build/target/vprofile-v1.war
-        dest: /usr/share//usr/share/wildfly-10.1/standalone/deployments
+        dest: /usr/share/wildfly-10.1/standalone/deployments
 
 
 
