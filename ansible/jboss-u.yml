@@ -48,8 +48,8 @@
       
       tags: [wildfly]
 
-    - name: setting environment varibale
-      shell: echo   
+    - name: setting environment varibale for java and jboss
+      shell: nohup ./evn.sh &   
 
     - name: replacing bind address with any ip
       replace:
