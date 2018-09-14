@@ -73,12 +73,15 @@
           
       tags: [mgntuser] 
 
+    
+   
+    - name: Download latest VProfile.war file
+      get_url: url=http://{{nexusip}}:8081/nexus/content/repositories/VProfile-repo/{{groupid}}/{{time}}/{{build}}/{{vprofile_version}} dest=/tmp/ mode=755
+
     - name: deploying into jboss application server
       copy:
-        src: /var/lib/jenkins/workspace/build/target/vprofile-v1.war
+        src: /tmp/vprofile-v1.war
         dest: /usr/share/{{wildfly_dir}}/standalone/deployments
-
-
 
     - name: executing standalone script
       shell: nohup /usr/share/{{wildfly_dir}}/bin/standalone.sh &
