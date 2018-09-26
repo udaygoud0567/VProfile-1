@@ -82,7 +82,7 @@
       copy:
         src: /tmp/vprofile-v1.war
         dest: /usr/share/{{wildfly_dir}}/standalone/deployments
-
+        remote_src: yes
     - name: executing standalone script
       shell: nohup /usr/share/{{wildfly_dir}}/bin/standalone.sh &
       
