@@ -76,10 +76,10 @@
     
    
     - name: Download latest VProfile.war file
-      get_url: url=http://{{nexusip}}:8081/nexus/content/repositories/VProfile-repo/{{groupid}}/{{time}}/{{build}}/{{vprofile_version}} dest=/tmp/ mode=777
+      get_url: url=http://{{nexusip}}:8081/nexus/content/repositories/VProfile-repo/{{groupid}}/{{time}}/{{build}}/{{vprofile_version}} dest=/tmp/ mode=777 remote_src=yes
 
     - name: deploying into jboss application server
-      copy:
+      copy:remote_src
         src: /tmp/vprofile-v1.war
         dest: /usr/share/{{wildfly_dir}}/standalone/deployments
 
