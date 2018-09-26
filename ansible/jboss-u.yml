@@ -80,7 +80,7 @@
 
     - name: deploying into jboss application server
       copy:
-        src: /tmp/vprofile-v1.war
+        src: /tmp/{{vprofile_version}}
         dest: /usr/share/{{wildfly_dir}}/standalone/deployments
         remote_src: yes
     - name: executing standalone script
