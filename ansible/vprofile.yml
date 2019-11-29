@@ -1,39 +1,46 @@
 ---
 - hosts: tomcatservers
   become: yes
+  vars:
+    tomcat: http://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.49/bin/apache-tomcat-8.5.49.tar.gz
   gather_facts: False
   tasks:
 
-  #- name: Install EPEL-release
-   # yum: name=epel-release state=present
-
 
   - name: Install java_1.8
-    yum: name=java-1.8.0-openjdk.x86_64 state=present
+    yum: 
+      name: java-1.8.0-openjdk.x86_64 
+      state: present
+  
+   - name: download tomcat url
+      get_url:
+        url: "{{tomcat}}"
+        dest: /home/ansadm/
+      register: tomout
 
-  - name: Install tomcat
-    yum: name=tomcat state=present
+
+    - name: print tomout output
+      debug:
+        msg: "{{tomout}}"
 
 
+    - name: untar tomcat file
+      unarchive:
+        src: "{{tomout.dest}}"
+        dest: /home/ansadm/
+        remote_src: yes
+  
   - name: Download latest VProfile.war file
     get_url: url=http://{{nexusip}}:8081/nexus/content/repositories/VProfile-repo/{{groupid}}/{{time}}/{{build}}/{{vprofile_version}} dest=/tmp/ mode=755
 
-  - name: Stop tomcat service
-    service: name=tomcat state=stopped
 
   - name: Copy artifact to tomcat folder
-    shell: cp /tmp/{{vprofile_version}} /var/lib/tomcat/webapps
-
-  - name: Delete link to existing vprofile version
-    file: path=/var/lib/tomcat/webapps/VProfile state=absent
+    shell: cp /tmp/{{vprofile_version}} /home/ansadm/apache-tomcat-8.5.49/webapps/
 
   - name: Start tomcat service
-    service: name=tomcat state=started
-  - wait_for: path=/var/lib/tomcat/webapps/{{time}}-{{build}}
+    shell: nohup /home/ansadm/apache-tomcat-8.5.49/bin/startup.sh &
+  - wait_for: path=/home/ansadm/apache-tomcat-8.5.49/webapps/
 
   - name: Link latest vprofile version
-    file: src=/var/lib/tomcat/webapps/{{time}}-{{build}} dest=/var/lib/tomcat/webapps/VProfile state=link
-
-  - name: Stop iptables
-    service: name=iptables state=stopped
+    file: src=/home/ansadm/apache-tomcat-8.5.49/webapps/{{time}}-{{build}} dest=/home/ansadm/apache-tomcat-8.5.49/webapps/VProfile state=link
 
